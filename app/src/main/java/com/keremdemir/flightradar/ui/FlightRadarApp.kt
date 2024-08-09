@@ -5,8 +5,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.keremdemir.flightradar.ui.home.HomeScreen
-import com.keremdemir.flightradar.ui.login.LoginScreen
-import com.keremdemir.flightradar.ui.login.RegisterScreen
 import com.keremdemir.flightradar.ui.splash.SplashScreen
 
 @Composable
@@ -36,9 +34,11 @@ fun FlightRadarApp(){
             })
         }*/
 
+
         composable(route = "home"){
             HomeScreen()
         }
+
 
     }
 }

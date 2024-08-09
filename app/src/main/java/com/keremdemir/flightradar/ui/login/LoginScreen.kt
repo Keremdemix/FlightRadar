@@ -16,7 +16,7 @@ fun LoginScreen(onButtonClick: () -> Unit, onLoginButtonClick:()->Unit){
         Spacer(modifier = Modifier.height(44.dp)
 
         )
-        Text(text = "Login Screen", modifier = Modifier.align(Alignment.CenterHorizontally),)
+        Text(text = "Login Screen", modifier = Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.height(24.dp)
 
         )
@@ -37,3 +37,8 @@ fun LoginScreen(onButtonClick: () -> Unit, onLoginButtonClick:()->Unit){
     }
 
 }
+
+//Nav bar işlevi eklenecek
+//Searchbar işlevi eklenecek
+//Github  düzeni yapılacak
+

@@ -55,7 +55,7 @@ import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 
 @Composable
-fun HomeScreen(onHomeButtonClick:()->Unit,onFlightButtonClick:()->Unit,onDestinationButtonClick:()->Unit) {
+fun HomeScreen(/*onHomeButtonClick:()->Unit,onFlightButtonClick:()->Unit,onDestinationButtonClick:()->Unit*/) {
     val flightsViewModel: FlightsViewModel = viewModel()
     val destinationViewModel:DestinationViewModel= viewModel()
 

@@ -7,13 +7,13 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -21,16 +21,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -55,22 +48,16 @@ import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 
 @Composable
-fun HomeScreen(/*onHomeButtonClick:()->Unit,onFlightButtonClick:()->Unit,onDestinationButtonClick:()->Unit*/) {
+fun HomeScreen(/*onFlightButtonClick:()->Unit,onFavouriteButtonClick:()->Unit*/) {
     val flightsViewModel: FlightsViewModel = viewModel()
     val destinationViewModel:DestinationViewModel= viewModel()
 
     val destination=destinationViewModel.destinations.observeAsState().value?.destinations
     val flights = flightsViewModel.flights.observeAsState().value?.flights
-
-    Scaffold (
-        bottomBar = {
-            MyBottomAppBar()
-        }
-    ) { _ ->
             Box {
                 Column(
                     modifier = Modifier
-                        .padding(bottom = 120.dp)
+                        .padding(bottom = 100.dp)
                         .fillMaxSize()
                         .background(Color.White)
                 ) {
@@ -115,10 +102,10 @@ fun HomeScreen(/*onHomeButtonClick:()->Unit,onFlightButtonClick:()->Unit,onDesti
                         Row (modifier = Modifier
                             .padding(horizontal = 24.dp)
                             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-                            TextButton(onClick = {}) {
+                            TextButton(onClick = /*onFlightButtonClick*/{}) {
                                 Text(text = "See More Flights...")
                             }
-                            TextButton(onClick = {}) {
+                            TextButton(onClick = /*onFavouriteButtonClick*/{}) {
                                 Text(text = "See Favourite Flights...")
 
                             }
@@ -133,14 +120,11 @@ fun HomeScreen(/*onHomeButtonClick:()->Unit,onFlightButtonClick:()->Unit,onDesti
 
                         if(destination!=null){
                             LazyRow(modifier = Modifier.padding(start =  20.dp)) {
-                                items(destination){destination->
+                                items(destination){
                                     DestinationCard()
                                 }
                             }
                         }
-
-
-
                     }
 
                     /*
@@ -164,98 +148,37 @@ fun HomeScreen(/*onHomeButtonClick:()->Unit,onFlightButtonClick:()->Unit,onDesti
                 FRSearchBar(
                     modifier = Modifier
                         .padding(top = 212.dp)
-                        .padding(horizontal = 24.dp)
+                        .padding(horizontal = 24.dp),
+
                 )
             }
     }
-}
-
-
-@Composable
-fun MyBottomAppBar(){
-    BottomAppBar(
-        tonalElevation = 0.dp,
-        modifier = Modifier
-            .padding(bottom = 0.dp),
-        containerColor = colorResource(R.color.light_blue),
-        contentPadding = PaddingValues(0.dp),
-    )
-    {
-        Box {
-            Column {
-                Row (modifier = Modifier
-                    .background(color = Color.White)
-                    .height(30.dp)
-                    .padding(0.dp)
-                    .fillMaxWidth()){
-
-
-                }
-                Row(modifier = Modifier
-                    .background(color = colorResource(R.color.light_blue))
-                    .height(90.dp)
-                    .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    IconButton(
-                        modifier= Modifier
-                            .padding(horizontal = 60.dp)
-                            .size(35.dp),
-                        onClick = {}) {
-                        Image(painter = painterResource(R.drawable.fly),
-                            contentDescription = "Arrow Forward",
-                            modifier=Modifier
-                                .fillMaxSize()
-                        )
-                    }
-                    IconButton(
-                        modifier= Modifier
-                            .padding(horizontal = 60.dp)
-                            .size(35.dp),
-                        onClick = {}) {
-                        Icon(
-                            Icons.Filled.LocationOn,
-                            contentDescription = "Arrow Forward",
-                            modifier=Modifier.fillMaxSize()
-                        )
-                    }
-
-                }
-
-            }
-            Box(
-                modifier = Modifier
-                    .size(80.dp) // Ensure the Box is a square to retain the circular shape
-                    .clip(shape = CircleShape) // Clip the Box itself to be circular
-                    .background(Color.White)
-                    .align(Alignment.Center)// Apply background after clipping
-            ) {
-                IconButton(
-                    onClick = {},
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(80.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.Home,
-                        contentDescription = "Home",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
-        }
-
-
-    }
-}
 
 
 
 @Composable
 fun HomeEmptyView(){
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "No data")
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .height(500.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+        ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.cross),
+            contentDescription = "",
+            modifier = Modifier
+                .size(80.dp)
+
+                .clip(CircleShape)
+        )
+        Text(
+            modifier = Modifier.padding(top = 20.dp),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            text = "There is no result."
+        )
     }
 }
 
@@ -312,26 +235,25 @@ fun FlightCard(modifier: Modifier,flightName:String,prefixICAO:String,destinatio
                 }
                 Row (
                     modifier = Modifier
+                        .padding(10.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
 
                     ){
                     Row {
-
-
                         Image(
                             painter = painterResource(id = R.drawable.ic_launcher_background),
                             contentDescription = "",
                             modifier = Modifier
                                 .size(80.dp)
-                                .padding(5.dp)
                                 .clip(CircleShape)
                         )
-                        Column {
+                        Column(modifier = Modifier.height(80.dp)
+                            .padding(start = 10.dp),
+                            verticalArrangement = Arrangement.Center) {
                             Text(
-                                modifier = Modifier
-                                    .padding(5.dp),
+                                modifier = Modifier,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 22.sp,
                                 text = stringResource(id =R.string.company_name))
@@ -345,8 +267,7 @@ fun FlightCard(modifier: Modifier,flightName:String,prefixICAO:String,destinatio
                         }}
                     Image(
                         modifier = Modifier
-                            .size(32.dp)
-                            .padding(end = 16.dp),
+                            .size(32.dp),
                         alignment = Alignment.Center,
                         painter = painterResource(R.drawable.fav_icon),
                         contentDescription ="favourite icon"
@@ -396,12 +317,13 @@ fun CardDateText(modifier: Modifier,myString: String){
 fun DestinationCard(){
     Card (
         modifier = Modifier
+            .width(300.dp)
             .padding(top = 10.dp, end = 10.dp, start = 4.dp, bottom = 10.dp)
             .shadow(4.dp),
         colors =CardDefaults.cardColors(containerColor = Color.White)){
         Column() {
             Image(modifier = Modifier
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = 10.dp, vertical = 10.dp)
                 .fillMaxWidth(),
                 painter = painterResource(R.drawable.scene),
                 contentDescription ="Scene",
@@ -410,10 +332,11 @@ fun DestinationCard(){
             )
 
             Row (modifier = Modifier
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = 10.dp)
+                .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween){
-                Text(text = "Istanbul")
-                Text(text = "SAW")
+                Text(text = "Istanbul", fontWeight = FontWeight.Bold)
+                Text(text = "SAW", fontWeight = FontWeight.Bold)
             }
             Text(
                 text = "Turkey",

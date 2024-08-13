@@ -17,9 +17,9 @@ import com.keremdemir.flightradar.ui.splash.SplashScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FlightRadarApp(){
+fun FlightRadarApp() {
 
-    val navController= rememberNavController()
+    val navController = rememberNavController()
 
     Column {
         Scaffold(
@@ -34,45 +34,30 @@ fun FlightRadarApp(){
         }
     }
 
-    
+
 }
 
 @Composable
-fun NavGraph(navController: NavHostController){
-    NavHost( navController =navController, startDestination = "splash" ) {
+fun NavGraph(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = "splash") {
 
-        composable(route = "splash"){
+        composable(route = "splash") {
             SplashScreen(
-                onButtonClicked = { navController.navigate("home")
-            })
+                onButtonClicked = {
+                    navController.navigate("home")
+                })
         }
 
-        /*composable(route = "login"){
-            LoginScreen (onButtonClick = {
-                navController.navigate("register")
-            }, onLoginButtonClick = {
-                navController.navigate("home")
 
-            })
-        }*/
-
-        /*composable(route = "register"){
-            RegisterScreen (onButtonClicked = {
-                println("Clicked")
-                navController.popBackStack()
-            })
-        }*/
-
-
-        composable(route = "home"){
-            HomeScreen()
+        composable(route = "home") {
+            HomeScreen(onFlightButtonClick = {}, onFavouriteButtonClick = {})
         }
 
-        composable(route = "destinations"){
+        composable(route = "destinations") {
             DestinationsScreen()
         }
 
-        composable(route = "flights"){
+        composable(route = "flights") {
             FlightsScreen()
         }
 

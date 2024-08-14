@@ -38,7 +38,3 @@ fun LoginScreen(onButtonClick: () -> Unit, onLoginButtonClick:()->Unit){
 
 }
 
-//Nav bar işlevi eklenecek
-//Searchbar işlevi eklenecek
-//Github  düzeni yapılacak
-

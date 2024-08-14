@@ -1,4 +1,5 @@
 package com.keremdemir.flightradar.ui.component
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -31,9 +32,11 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun FRSearchBar(modifier: Modifier = Modifier,
-              hint: String = "Search flight number",
-              onSearch: (String) -> Unit = {}
+fun FRSearchBar(
+    modifier: Modifier = Modifier,
+    hint: String = "Search flight number",
+    onSearch: (String) -> Unit,
+    onSearchButtonClick: (String) -> Unit
 ) {
     var searchInput by remember {
         mutableStateOf("")
@@ -43,10 +46,10 @@ fun FRSearchBar(modifier: Modifier = Modifier,
         mutableStateOf(hint != "")
     }
 
-    Row{
+    Row {
         Box(
             modifier = modifier
-                .border(width = 1.dp,Color.Gray, shape = RoundedCornerShape(10.dp))
+                .border(width = 1.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
                 .clip(shape = RoundedCornerShape(10.dp))
                 .background(color = Color.White)
                 .padding(20.dp, 10.dp, 30.dp, 10.dp), contentAlignment = Alignment.CenterStart
@@ -72,23 +75,27 @@ fun FRSearchBar(modifier: Modifier = Modifier,
                     }
             )
             IconButton(
-                modifier=
-                Modifier.align(Alignment.BottomEnd)
+                modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
                     .size(35.dp),
-                onClick = {}) {
+                onClick = { onSearchButtonClick(searchInput) }
+            ) {
+
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = "Arrow Forward",
-                    modifier=Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
 
             if (isHintDisplayed) {
                 Text(
+
                     text = hint,
-                    fontSize = 22.sp, // Set the font size of the hint text
-                    modifier = Modifier.align(Alignment.CenterStart) // Align the hint text to the center start
+                    fontSize = 22.sp,
+                    modifier = Modifier.align(Alignment.CenterStart)
                 )
             }
         }

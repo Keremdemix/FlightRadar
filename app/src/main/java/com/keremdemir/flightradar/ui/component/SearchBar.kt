@@ -30,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun FRSearchBar(
     modifier: Modifier = Modifier,
@@ -54,48 +53,32 @@ fun FRSearchBar(
                 .background(color = Color.White)
                 .padding(20.dp, 10.dp, 30.dp, 10.dp), contentAlignment = Alignment.CenterStart
         ) {
-
-            BasicTextField(
-                value = searchInput,
-                onValueChange = {
-                    searchInput = it
-                    onSearch(it)
-                },
-                maxLines = 1,
-                singleLine = true,
-                textStyle = TextStyle(
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.W400
-                ),
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .fillMaxWidth()
-                    .onFocusChanged {
-                        isHintDisplayed = !it.isFocused
-                    }
-            )
-            IconButton(
-                modifier =
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(35.dp),
-                onClick = { onSearchButtonClick(searchInput) }
-            ) {
-
+            BasicTextField(value = searchInput, onValueChange = {
+                searchInput = it
+                onSearch(it)
+            }, maxLines = 1, singleLine = true, textStyle = TextStyle(
+                fontSize = 22.sp, fontWeight = FontWeight.W400
+            ), modifier = Modifier
+                .align(Alignment.CenterStart)
+                .fillMaxWidth()
+                .onFocusChanged {
+                    isHintDisplayed = !it.isFocused
+                })
+            IconButton(modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .size(35.dp),
+                onClick = { onSearchButtonClick(searchInput) }) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = "Arrow Forward",
                     modifier = Modifier.fillMaxSize()
                 )
             }
-
-
             if (isHintDisplayed) {
                 Text(
-
+                    modifier = Modifier.align(Alignment.CenterStart),
                     text = hint,
                     fontSize = 22.sp,
-                    modifier = Modifier.align(Alignment.CenterStart)
                 )
             }
         }

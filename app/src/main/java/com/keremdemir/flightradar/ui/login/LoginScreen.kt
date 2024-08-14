@@ -11,30 +11,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoginScreen(onButtonClick: () -> Unit, onLoginButtonClick:()->Unit){
+fun LoginScreen(onButtonClick: () -> Unit, onLoginButtonClick: () -> Unit) {
     Column {
-        Spacer(modifier = Modifier.height(44.dp)
-
+        Spacer(
+            modifier = Modifier.height(44.dp)
         )
         Text(text = "Login Screen", modifier = Modifier.align(Alignment.CenterHorizontally))
-        Spacer(modifier = Modifier.height(24.dp)
-
+        Spacer(
+            modifier = Modifier.height(24.dp)
         )
-        Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = {
+        Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
             onButtonClick()
         }) {
             Text(text = "Open Register Screen")
         }
-        Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = {
-                onLoginButtonClick()
-            }) {
+        Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
+            onLoginButtonClick()
+        }) {
             Text(text = "Login")
         }
     }
-
 }
-

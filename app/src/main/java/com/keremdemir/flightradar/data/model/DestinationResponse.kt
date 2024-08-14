@@ -15,7 +15,3 @@ data class PublicName(
     val dutch: String,
     val english: String,
 )
-
-
-
-

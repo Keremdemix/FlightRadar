@@ -18,4 +18,3 @@ data class Route(
     val eu: String,
     val visa: Boolean,
 )
-

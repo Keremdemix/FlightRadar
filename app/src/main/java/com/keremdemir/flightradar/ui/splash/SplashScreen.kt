@@ -24,35 +24,35 @@ import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 
 @Composable
-fun SplashScreen(navigateWhenDataFetch:()->Unit) {
+fun SplashScreen(navigateWhenDataFetch: () -> Unit) {
     val flightsViewModel: FlightsViewModel = viewModel()
-    val destinationViewModel:DestinationViewModel= viewModel()
-    val destination=destinationViewModel.destinations.observeAsState().value?.destinations
+    val destinationViewModel: DestinationViewModel = viewModel()
+    val destination = destinationViewModel.destinations.observeAsState().value?.destinations
     val flights = flightsViewModel.flights.observeAsState().value?.flights
-    Scaffold (
-        Modifier.fillMaxSize(),
-        containerColor = colorResource(R.color.light_blue)
-    ){ innerPadding ->
-        Column (modifier = Modifier.fillMaxSize(),
+    Scaffold(
+        Modifier.fillMaxSize(), containerColor = colorResource(R.color.light_blue)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally ){
-
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_app_flight_icon),
                 contentDescription = "",
                 modifier = Modifier
                     .size(120.dp)
-                    .align(Alignment.CenterHorizontally))
-            Text(text = stringResource(id = R.string.app_name), modifier = Modifier.padding(15.dp), color = Color.White, fontSize = 32.sp)
-
-
-            if(flights.isNullOrEmpty()&&destination.isNullOrEmpty()){
-            navigateWhenDataFetch()
+                    .align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = stringResource(id = R.string.app_name),
+                modifier = Modifier.padding(15.dp),
+                color = Color.White,
+                fontSize = 32.sp
+            )
+            if (flights.isNullOrEmpty() && destination.isNullOrEmpty()) {
+                navigateWhenDataFetch()
             }
         }
-
     }
-
 }
-
-

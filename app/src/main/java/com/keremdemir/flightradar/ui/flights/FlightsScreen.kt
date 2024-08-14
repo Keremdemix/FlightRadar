@@ -43,18 +43,12 @@ fun FlightsScreen() {
         }
     ) { _ ->
         flights?.let {
-
             Column(
                 modifier = Modifier
                     .padding(bottom = 120.dp)
                     .fillMaxSize()
                     .background(Color.White)
-            ) {
-
-            }
+            ) {}
         }
-
     }
-
 }
-

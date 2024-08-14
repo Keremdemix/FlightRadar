@@ -11,14 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RegisterScreen(onButtonClicked :() -> Unit){
+fun RegisterScreen(onButtonClicked: () -> Unit) {
     Column {
-        Spacer(modifier = Modifier.height(44.dp)
-
+        Spacer(
+            modifier = Modifier.height(44.dp)
         )
-        Text(text = "Register Screen", modifier = Modifier.align(Alignment.CenterHorizontally),)
-        Spacer(modifier = Modifier.height(24.dp)
-
+        Text(
+            text = "Register Screen", modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(
+            modifier = Modifier.height(24.dp)
         )
         Button(onClick = {
             onButtonClicked()

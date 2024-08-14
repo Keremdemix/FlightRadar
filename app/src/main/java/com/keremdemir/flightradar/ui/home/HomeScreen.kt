@@ -58,13 +58,10 @@ import kotlin.concurrent.schedule
 fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Unit) {
     val flightsViewModel: FlightsViewModel = viewModel()
     val destinationViewModel: DestinationViewModel = viewModel()
-
     val destinations = destinationViewModel.destinations.observeAsState().value?.destinations
     val flights = flightsViewModel.flights.observeAsState().value?.flights
     var filteredFlights by remember { mutableStateOf(flights) }
-
     var timer: Timer = Timer()
-
 
     Box {
         Column(
@@ -73,18 +70,13 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-
             Top()
-
             if (filteredFlights == null) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     Row(Modifier.padding(top = 60.dp, start = 24.dp)) {
                         Text(
-                            text = "Top Flights",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 26.sp,
-
-                            )
+                            text = "Top Flights", fontWeight = FontWeight.Bold, fontSize = 26.sp
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.fly),
                             contentDescription = "",
@@ -94,7 +86,6 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                                 .align(Alignment.CenterVertically)
                         )
                     }
-
                     if (flights != null) {
                         Column {
                             flights.take(3).forEach { flight ->
@@ -107,11 +98,11 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                             }
                         }
                     }
-
                     Row(
                         modifier = Modifier
                             .padding(horizontal = 24.dp)
-                            .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TextButton(onClick = onFlightButtonClick) {
                             Text(text = "See More Flights...")
@@ -121,14 +112,12 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
 
                         }
                     }
-
                     Text(
                         text = stringResource(id = R.string.destinations),
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
                         modifier = Modifier.padding(start = 24.dp)
                     )
-
                     if (destinations != null) {
                         LazyRow(modifier = Modifier.padding(start = 20.dp)) {
                             items(destinations) {
@@ -146,8 +135,7 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                             text = "Top Flights",
                             fontWeight = FontWeight.Bold,
                             fontSize = 26.sp,
-
-                            )
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.fly),
                             contentDescription = "",
@@ -170,15 +158,11 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                 }
             }
         }
-
-
     }
 
-    FRSearchBar(
-        modifier = Modifier
-            .padding(top = 212.dp)
-            .padding(horizontal = 24.dp),
-
+    FRSearchBar(modifier = Modifier
+        .padding(top = 212.dp)
+        .padding(horizontal = 24.dp),
         onSearchButtonClick = { query ->
             if (query.isNotEmpty()) {
                 filteredFlights = flights?.filter { flight ->
@@ -188,13 +172,11 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
             }
         },
 
-
         onSearch = { query ->
             timer.cancel()
             timer = Timer()
             timer.schedule(2000) {
                 if (query.length >= 3) {
-
                     filteredFlights = flights?.filter { flight ->
                         flight.flightName.contains(query, ignoreCase = true)
                     }
@@ -202,13 +184,9 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                 } else {
                     filteredFlights = null
                 }
-
             }
-
-        }
-    )
+        })
 }
-
 
 @Composable
 fun HomeEmptyView() {
@@ -219,7 +197,6 @@ fun HomeEmptyView() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.cross),
             contentDescription = "",
@@ -236,7 +213,6 @@ fun HomeEmptyView() {
         )
     }
 }
-
 
 @Composable
 fun Top() {
@@ -260,7 +236,6 @@ fun Top() {
     }
 }
 
-
 @Composable
 fun FlightCard(modifier: Modifier, flightName: String, prefixICAO: String, destination: String) {
     Card(
@@ -272,7 +247,6 @@ fun FlightCard(modifier: Modifier, flightName: String, prefixICAO: String, desti
     ) {
         Column(
             modifier = Modifier
-
                 .clip(shape = RoundedCornerShape(15.dp))
                 .border(1.dp, color = Color.Gray, shape = RoundedCornerShape(15.dp))
         ) {
@@ -282,8 +256,7 @@ fun FlightCard(modifier: Modifier, flightName: String, prefixICAO: String, desti
                     .background(color = colorResource(R.color.light_blue))
             ) {
                 Text(
-                    modifier = Modifier
-                        .padding(5.dp),
+                    modifier = Modifier.padding(5.dp),
                     color = Color.White,
                     fontSize = 24.sp,
                     text = "Istanbul-Ankara"
@@ -295,8 +268,7 @@ fun FlightCard(modifier: Modifier, flightName: String, prefixICAO: String, desti
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-
-                ) {
+            ) {
                 Row {
                     Image(
                         painter = painterResource(id = R.drawable.ic_launcher_background),
@@ -318,8 +290,7 @@ fun FlightCard(modifier: Modifier, flightName: String, prefixICAO: String, desti
                             text = stringResource(id = R.string.company_name)
                         )
                         Text(
-                            modifier = Modifier
-                                .padding(5.dp),
+                            modifier = Modifier.padding(5.dp),
                             fontSize = 22.sp,
                             color = Color.Gray,
                             text = flightName
@@ -327,8 +298,7 @@ fun FlightCard(modifier: Modifier, flightName: String, prefixICAO: String, desti
                     }
                 }
                 Image(
-                    modifier = Modifier
-                        .size(32.dp),
+                    modifier = Modifier.size(32.dp),
                     alignment = Alignment.Center,
                     painter = painterResource(R.drawable.fav_icon),
                     contentDescription = "favourite icon"
@@ -353,40 +323,30 @@ fun FlightCard(modifier: Modifier, flightName: String, prefixICAO: String, desti
                         painter = painterResource(id = R.drawable.arrow),
                         contentDescription = "arrow"
                     )
-
                 }
                 Column {
                     CardDateText(modifier = Modifier, destination)
                     CardDateText(modifier = Modifier, "9.00")
                     CardDateText(modifier = Modifier, "T7 05/02/2024")
-
                 }
             }
-
         }
     }
-
 }
-
 
 @Composable
 fun CardDateText(modifier: Modifier, myString: String) {
     Text(
-        fontSize = 18.sp,
-        fontWeight = FontWeight.W500,
-        text = myString
+        fontSize = 18.sp, fontWeight = FontWeight.W500, text = myString
     )
 }
 
-
 @Composable
 fun DestinationCard(
-
     modifier: Modifier = Modifier,
     cardModifier: Modifier = Modifier,
     imageModifier: Modifier = Modifier,
-
-    ) {
+) {
     Column(
         modifier = cardModifier
             .width(300.dp)
@@ -402,9 +362,7 @@ fun DestinationCard(
                 painter = painterResource(R.drawable.scene),
                 contentDescription = "Scene",
                 contentScale = ContentScale.Crop
-
             )
-
             Row(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
@@ -422,7 +380,4 @@ fun DestinationCard(
             )
         }
     }
-
 }
-
-

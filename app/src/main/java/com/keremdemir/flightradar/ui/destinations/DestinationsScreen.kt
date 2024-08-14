@@ -30,21 +30,16 @@ fun DestinationsScreen() {
     val destinationViewModel: DestinationViewModel = viewModel()
     val destinations = destinationViewModel.destinations.observeAsState().value?.destinations
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = topAppBarColors(
-                    containerColor = colorResource(R.color.light_blue),
-                ),
-                title = {
-                    Text(
-                        stringResource(id = R.string.destinations),
-                        color = Color.White,
-                    )
-                }
+    Scaffold(topBar = {
+        TopAppBar(colors = topAppBarColors(
+            containerColor = colorResource(R.color.light_blue),
+        ), title = {
+            Text(
+                stringResource(id = R.string.destinations),
+                color = Color.White,
             )
-        }
-    ) { _ ->
+        })
+    }) { _ ->
         if (!destinations.isNullOrEmpty()) {
             Column(
                 Modifier
@@ -56,8 +51,7 @@ fun DestinationsScreen() {
                         imageModifier = Modifier
                             .height(100.dp)
                             .padding(),
-                        cardModifier = Modifier
-                            .width(400.dp)
+                        cardModifier = Modifier.width(400.dp)
                     )
                 }
             }

@@ -1,3 +1,5 @@
+package com.keremdemir.flightradar.ui.component
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.keremdemir.flightradar.R
 
-
 @Composable
 fun FRBottomNavigationBar(navController: NavController) {
     BottomAppBar(
@@ -43,8 +44,7 @@ fun FRBottomNavigationBar(navController: NavController) {
             .height(130.dp),
         containerColor = Color.Transparent,
         contentPadding = PaddingValues(0.dp),
-    )
-    {
+    ) {
         Box(modifier = Modifier.background(color = Color.Transparent)) {
             Column(modifier = Modifier.background(color = Color.Transparent)) {
                 Spacer(
@@ -53,9 +53,6 @@ fun FRBottomNavigationBar(navController: NavController) {
                         .height(30.dp)
                         .fillMaxWidth()
                 )
-
-
-
                 Row(
                     modifier = Modifier
                         .background(color = colorResource(R.color.light_blue))
@@ -74,8 +71,7 @@ fun FRBottomNavigationBar(navController: NavController) {
                         Image(
                             painter = painterResource(R.drawable.fly),
                             contentDescription = "Flights",
-                            modifier = Modifier
-                                .fillMaxSize()
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                     IconButton(
@@ -94,32 +90,30 @@ fun FRBottomNavigationBar(navController: NavController) {
 
                 }
 
-                }
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(shape = CircleShape)
-                        .background(Color.White)
+            }
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(shape = CircleShape)
+                    .background(Color.White)
+                    .align(Alignment.Center)
+            ) {
+                IconButton(
+                    onClick = {
+                        navController.navigate(BottomNavItem.Home.route)
+                    }, modifier = Modifier
                         .align(Alignment.Center)
+                        .size(80.dp)
                 ) {
-                    IconButton(
-                        onClick = {
-                            navController.navigate(BottomNavItem.Home.route)
-                        },
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(80.dp)
-                    ) {
-                        Icon(
-                            Icons.Outlined.Home,
-                            contentDescription = "Home",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
+                    Icon(
+                        Icons.Outlined.Home,
+                        contentDescription = "Home",
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }
-
+    }
 }
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
@@ -127,4 +121,3 @@ sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: 
     object Flights : BottomNavItem("flights", Icons.Default.Face, "Flights")
     object Destinations : BottomNavItem("destinations", Icons.Default.LocationOn, "Destinations")
 }
-

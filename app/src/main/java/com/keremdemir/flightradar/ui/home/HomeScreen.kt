@@ -96,7 +96,6 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                     }
 
                     if (flights != null) {
-
                         Column {
                             flights.take(3).forEach { flight ->
                                 FlightCard(
@@ -124,7 +123,7 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                     }
 
                     Text(
-                        text = "Destinations",
+                        text = stringResource(id = R.string.destinations),
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
                         modifier = Modifier.padding(start = 24.dp)
@@ -253,7 +252,6 @@ fun Top() {
             modifier = Modifier
                 .padding(40.dp, 120.dp, 80.dp, 40.dp)
                 .fillMaxWidth(),
-//            fontStyle = FontStyle.Italic,
             fontWeight = FontWeight.W700,
             color = Color.White,
             fontSize = 34.sp,

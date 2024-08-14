@@ -24,7 +24,7 @@ import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 
 @Composable
-fun SplashScreen(onButtonClicked:()->Unit) {
+fun SplashScreen(navigateWhenDataFetch:()->Unit) {
     val flightsViewModel: FlightsViewModel = viewModel()
     val destinationViewModel:DestinationViewModel= viewModel()
     val destination=destinationViewModel.destinations.observeAsState().value?.destinations
@@ -46,8 +46,8 @@ fun SplashScreen(onButtonClicked:()->Unit) {
             Text(text = stringResource(id = R.string.app_name), modifier = Modifier.padding(15.dp), color = Color.White, fontSize = 32.sp)
 
 
-            if (flights!=null&&destination!=null){
-                onButtonClicked()
+            if(flights.isNullOrEmpty()&&destination.isNullOrEmpty()){
+            navigateWhenDataFetch()
             }
         }
 

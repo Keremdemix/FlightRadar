@@ -92,9 +92,10 @@ fun FRSearchBar(
 
             if (isHintDisplayed) {
                 Text(
+
                     text = hint,
-                    fontSize = 22.sp, // Set the font size of the hint text
-                    modifier = Modifier.align(Alignment.CenterStart) // Align the hint text to the center start
+                    fontSize = 22.sp,
+                    modifier = Modifier.align(Alignment.CenterStart)
                 )
             }
         }

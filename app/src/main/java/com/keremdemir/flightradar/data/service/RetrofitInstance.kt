@@ -5,7 +5,6 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-//singleton
 object RetrofitInstance {
     private const val BASE_URL="https://api.schiphol.nl/public-flights/"
     val api: FlightsApi by lazy {

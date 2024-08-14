@@ -43,11 +43,9 @@ fun DestinationsScreen() {
                     )
                 }
             )
-
         }
     ) { _ ->
-        if (destinations != null) {
-
+        if (!destinations.isNullOrEmpty()) {
             Column(
                 Modifier
                     .padding(vertical = 100.dp)
@@ -64,7 +62,5 @@ fun DestinationsScreen() {
                 }
             }
         }
-
     }
-
 }

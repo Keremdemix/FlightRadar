@@ -25,7 +25,7 @@ fun FlightRadarApp() {
         Scaffold(
             bottomBar = {
                 val navBackStackEntry = navController.currentBackStackEntryAsState()
-                if (navBackStackEntry.value?.destination?.route != "splash") {
+                if (navBackStackEntry.value?.destination?.route != Screens.Splash.name) {
                     FRBottomNavigationBar(navController = navController)
                 }
             }
@@ -39,27 +39,33 @@ fun FlightRadarApp() {
 
 @Composable
 fun NavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "splash") {
+    NavHost(navController = navController, startDestination = Screens.Splash.name) {
 
-        composable(route = "splash") {
+        composable(route = Screens.Splash.name) {
             SplashScreen(
-                onButtonClicked = {
-                    navController.navigate("home")
+                navigateWhenDataFetch = {
+                    navController.navigate(Screens.Home.name)
                 })
         }
 
 
-        composable(route = "home") {
-            HomeScreen(onFlightButtonClick = {}, onFavouriteButtonClick = {})
+        composable(route = Screens.Home.name) {
+            HomeScreen(
+                onFlightButtonClick = { navController.navigate(Screens.Flights.name) },
+                onFavouriteButtonClick = {})
         }
 
-        composable(route = "destinations") {
+        composable(route = Screens.Destinations.name) {
             DestinationsScreen()
         }
 
-        composable(route = "flights") {
+        composable(route = Screens.Flights.name) {
             FlightsScreen()
         }
 
     }
+}
+
+enum class Screens {
+    Splash, Home, Flights, Destinations
 }

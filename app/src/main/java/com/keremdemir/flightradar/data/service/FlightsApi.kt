@@ -4,7 +4,6 @@ import com.keremdemir.flightradar.data.model.DestinationResponse
 import com.keremdemir.flightradar.data.model.FlightResponse
 import retrofit2.http.GET
 
-//interface
 interface FlightsApi {
 
     @GET("flights")

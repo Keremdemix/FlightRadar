@@ -50,9 +50,9 @@ fun DestinationCard(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                if (destinationCity != null) {
-                    Text(text = destinationCity, fontWeight = FontWeight.Bold)
-                }
+
+                Text(text = destinationCity ?: "", fontWeight = FontWeight.Bold)
+
                 Text(text = destinationIATA ?: "", fontWeight = FontWeight.Bold)
             }
             Text(

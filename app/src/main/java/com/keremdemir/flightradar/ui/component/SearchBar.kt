@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +35,7 @@ import com.keremdemir.flightradar.R
 @Composable
 fun FRSearchBar(
     modifier: Modifier = Modifier,
-    hint: String = "Search flight number",
+    hint: String = stringResource(id = R.string.search_hint),
     onSearch: (String) -> Unit,
     onSearchButtonClick: (String) -> Unit
 ) {

@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +37,12 @@ fun FlightCard(
     prefixICAO: String,
     destination: String,
     airlineCompany: String,
-    logo: Painter
+    logo: Painter,
+    scheduleTime: String,
+    scheduleDate: String,
+    estimatedLandingTime: String,
+    estimatedLandingDate: String,
+    duration: String
 ) {
     Card(
         modifier = Modifier
@@ -126,16 +130,15 @@ fun FlightCard(
                         text = prefixICAO, fontSize = 14.sp, fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "8.00", fontSize = 12.sp
+                        text = scheduleTime, fontSize = 12.sp
                     )
                     Text(
-                        text = "T7 05/02/2024", fontSize = 12.sp
+                        text = scheduleDate, fontSize = 12.sp
                     )
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        color = colorResource(id = R.color.grey_300),
-                        text = stringResource(id = R.string.flight_duration)
+                        color = colorResource(id = R.color.grey_300), text = duration.toString()
                     )
                     Image(
                         painter = painterResource(id = R.drawable.arrow),
@@ -147,10 +150,10 @@ fun FlightCard(
                         text = destination, fontSize = 14.sp, fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "8.00", fontSize = 12.sp
+                        text = estimatedLandingTime, fontSize = 12.sp
                     )
                     Text(
-                        text = "T7 05/02/2024", fontSize = 12.sp
+                        text = estimatedLandingDate, fontSize = 12.sp
                     )
                 }
             }

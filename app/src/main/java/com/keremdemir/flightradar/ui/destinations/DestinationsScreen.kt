@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.keremdemir.flightradar.R
-import com.keremdemir.flightradar.ui.home.DestinationCard
+import com.keremdemir.flightradar.ui.component.DestinationCard
 import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

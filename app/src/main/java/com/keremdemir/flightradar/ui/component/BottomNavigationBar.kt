@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.keremdemir.flightradar.R
+import com.keremdemir.flightradar.ui.Screens
 
 @Composable
 fun FRBottomNavigationBar(navController: NavController) {
@@ -41,7 +41,7 @@ fun FRBottomNavigationBar(navController: NavController) {
         windowInsets = WindowInsets(0, 0, 0, 0),
         modifier = Modifier
             .padding(bottom = 0.dp)
-            .height(130.dp),
+            .height(100.dp),
         containerColor = Color.Transparent,
         contentPadding = PaddingValues(0.dp),
     ) {
@@ -61,10 +61,9 @@ fun FRBottomNavigationBar(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    IconButton(
-                        modifier = Modifier
-                            .padding(horizontal = 60.dp)
-                            .size(35.dp),
+                    IconButton(modifier = Modifier
+                        .padding(horizontal = 60.dp)
+                        .size(35.dp),
                         onClick = {
                             navController.navigate(BottomNavItem.Flights.route)
                         }) {
@@ -74,22 +73,19 @@ fun FRBottomNavigationBar(navController: NavController) {
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-                    IconButton(
-                        modifier = Modifier
-                            .padding(horizontal = 60.dp)
-                            .size(35.dp),
+                    IconButton(modifier = Modifier
+                        .padding(horizontal = 60.dp)
+                        .size(35.dp),
                         onClick = {
                             navController.navigate(BottomNavItem.Destinations.route)
                         }) {
                         Icon(
-                            Icons.Filled.LocationOn,
-                            contentDescription = "Destinations",
+                            BottomNavItem.Destinations.icon,
+                            contentDescription = BottomNavItem.Destinations.label,
                             modifier = Modifier.fillMaxSize()
                         )
                     }
-
                 }
-
             }
             Box(
                 modifier = Modifier
@@ -106,8 +102,8 @@ fun FRBottomNavigationBar(navController: NavController) {
                         .size(80.dp)
                 ) {
                     Icon(
-                        Icons.Outlined.Home,
-                        contentDescription = "Home",
+                        BottomNavItem.Home.icon,
+                        contentDescription = BottomNavItem.Home.label,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -117,7 +113,7 @@ fun FRBottomNavigationBar(navController: NavController) {
 }
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
-    object Home : BottomNavItem("home", Icons.Default.Home, "Home")
-    object Flights : BottomNavItem("flights", Icons.Default.Face, "Flights")
-    object Destinations : BottomNavItem("destinations", Icons.Default.LocationOn, "Destinations")
+    object Home : BottomNavItem(Screens.Home.name, Icons.Default.Home, "Home")
+    object Flights : BottomNavItem(Screens.Flights.name, Icons.Default.Face, "Flights")
+    object Destinations : BottomNavItem(Screens.Destinations.name, Icons.Default.LocationOn, "Destinations")
 }

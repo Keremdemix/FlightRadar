@@ -25,15 +25,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.keremdemir.flightradar.R
 
 @Composable
 fun FRSearchBar(
     modifier: Modifier = Modifier,
-    hint: String = "Search flight number",
+    hint: String = stringResource(id = R.string.search_hint),
     onSearch: (String) -> Unit,
     onSearchButtonClick: (String) -> Unit
 ) {
@@ -48,8 +50,12 @@ fun FRSearchBar(
     Row {
         Box(
             modifier = modifier
-                .border(width = 1.dp, Color.Gray, shape = RoundedCornerShape(10.dp))
-                .clip(shape = RoundedCornerShape(10.dp))
+                .border(
+                    width = 1.dp,
+                    colorResource(id = R.color.grey_100),
+                    shape = RoundedCornerShape(5.dp)
+                )
+                .clip(shape = RoundedCornerShape(5.dp))
                 .background(color = Color.White)
                 .padding(20.dp, 10.dp, 30.dp, 10.dp), contentAlignment = Alignment.CenterStart
         ) {
@@ -57,7 +63,7 @@ fun FRSearchBar(
                 searchInput = it
                 onSearch(it)
             }, maxLines = 1, singleLine = true, textStyle = TextStyle(
-                fontSize = 22.sp, fontWeight = FontWeight.W400
+                fontSize = 14.sp,
             ), modifier = Modifier
                 .align(Alignment.CenterStart)
                 .fillMaxWidth()
@@ -76,9 +82,10 @@ fun FRSearchBar(
             }
             if (isHintDisplayed) {
                 Text(
-                    modifier = Modifier.align(Alignment.CenterStart),
+                    color = colorResource(R.color.grey_300),
                     text = hint,
-                    fontSize = 22.sp,
+                    fontSize = 14.sp,
+                    modifier = Modifier.align(Alignment.CenterStart)
                 )
             }
         }

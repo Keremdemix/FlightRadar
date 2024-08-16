@@ -31,8 +31,6 @@ fun FlightRadarApp() {
             NavGraph(navController = navController)
         }
     }
-
-
 }
 
 @Composable

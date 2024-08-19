@@ -32,6 +32,7 @@ import com.keremdemir.flightradar.R
 
 @Composable
 fun FlightCard(
+    onCardClicked:(id:String)->Unit,
     modifier: Modifier,
     flightName: String,
     prefixICAO: String,
@@ -40,11 +41,15 @@ fun FlightCard(
     logo: Painter,
     scheduleTime: String,
     scheduleDate: String,
-    estimatedLandingTime: String,
-    estimatedLandingDate: String,
-    duration: String
+    estimatedLandingTime: String?,
+    estimatedLandingDate: String?,
+    duration: String?,
+    flightID:String
 ) {
     Card(
+        onClick = {
+            onCardClicked(flightID)
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 8.dp),
@@ -137,9 +142,11 @@ fun FlightCard(
                     )
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        color = colorResource(id = R.color.grey_300), text = duration.toString()
-                    )
+                    duration?.let {
+                        Text(
+                            color = colorResource(id = R.color.grey_300), text = duration.toString()
+                        )
+                    }
                     Image(
                         painter = painterResource(id = R.drawable.arrow),
                         contentDescription = "arrow"
@@ -149,12 +156,16 @@ fun FlightCard(
                     Text(
                         text = destination, fontSize = 14.sp, fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = estimatedLandingTime, fontSize = 12.sp
-                    )
-                    Text(
-                        text = estimatedLandingDate, fontSize = 12.sp
-                    )
+                    estimatedLandingTime?.let {
+                        Text(
+                            text = it, fontSize = 12.sp
+                        )
+                    }
+                    estimatedLandingDate?.let {
+                        Text(
+                            text = it, fontSize = 12.sp
+                        )
+                    }
                 }
             }
         }

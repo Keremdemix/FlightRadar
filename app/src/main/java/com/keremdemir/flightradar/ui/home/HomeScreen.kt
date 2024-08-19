@@ -39,22 +39,24 @@ import com.keremdemir.flightradar.R
 import com.keremdemir.flightradar.data.AirlineRepository
 import com.keremdemir.flightradar.ui.component.DestinationCard
 import com.keremdemir.flightradar.ui.component.FRSearchBar
+import com.keremdemir.flightradar.ui.component.FRTop
 import com.keremdemir.flightradar.ui.component.FlightCard
 import com.keremdemir.flightradar.ui.component.LoadingView
 import com.keremdemir.flightradar.ui.component.NoResultView
-import com.keremdemir.flightradar.ui.component.Top
+import com.keremdemir.flightradar.ui.component.TopBarConfig
 import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Timer
 import kotlin.concurrent.schedule
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Unit) {
+fun HomeScreen(onFlightButtonClick: () -> Unit, onCardClicked: (id: String) -> Unit) {
     val flightsViewModel: FlightsViewModel = viewModel()
     val destinationViewModel: DestinationViewModel = viewModel()
     val destinations = destinationViewModel.destinations.observeAsState().value?.destinations
@@ -69,7 +71,11 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-            Top()
+            FRTop(
+                config = TopBarConfig(
+                    isHomeScreen = true, title = stringResource(id = R.string.home_header)
+                )
+            )
             if (filteredFlights == null) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     Row(Modifier.padding(top = 50.dp, start = 20.dp)) {
@@ -87,34 +93,44 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                                 .align(Alignment.CenterVertically)
                         )
                     }
-                    if (flights != null) {
+                    if (1==1) {
                         Column {
-                            flights.take(3).forEach { flight ->
-                                val scheduleTime = LocalTime.parse(
-                                    flight.scheduleTime, DateTimeFormatter.ISO_LOCAL_TIME
-                                )
-                                val parsedDateTime = OffsetDateTime.parse(
-                                    flight.estimatedLandingTime,
-                                    DateTimeFormatter.ISO_OFFSET_DATE_TIME
-                                )
-                                val airlineData =
-                                    AirlineRepository.getAirlineDataByICAO(flight.prefixICAO)
-                                val duration = java.time.Duration.between(
-                                    parsedDateTime.toLocalTime(), scheduleTime
-                                )
-                                FlightCard(
-                                    prefixICAO = flight.prefixICAO,
-                                    flightName = flight.flightName,
-                                    destination = flight.route.destinations[0],
-                                    modifier = Modifier,
-                                    airlineCompany = airlineData!!.name,
-                                    logo = painterResource(id = airlineData.logoResId),
-                                    scheduleDate = flight.scheduleDate,
-                                    scheduleTime = flight.scheduleTime,
-                                    estimatedLandingDate = parsedDateTime.toLocalDate().toString(),
-                                    estimatedLandingTime = parsedDateTime.toLocalTime().toString(),
-                                    duration = "${duration.toHours()}h${duration.toMinutes()}m"
-                                )
+                            if (flights != null) {
+                                flights.take(3).forEach { flight ->
+                                    val scheduleTime = LocalTime.parse(
+                                        flight.scheduleTime, DateTimeFormatter.ISO_LOCAL_TIME
+                                    )
+                                    val parsedDateTime: OffsetDateTime? =
+                                        flight.estimatedLandingTime?.let {
+                                            try {
+                                                OffsetDateTime.parse(
+                                                    it, DateTimeFormatter.ISO_OFFSET_DATE_TIME
+                                                )
+                                            } catch (e: DateTimeParseException) {
+                                                null
+                                            }
+                                        }
+                                    val airlineData =
+                                        AirlineRepository.getAirlineDataByICAO(flight.prefixICAO)
+                                    val duration = parsedDateTime?.let {
+                                        java.time.Duration.between(scheduleTime, it.toLocalTime())
+                                    } ?: java.time.Duration.ZERO
+                                    FlightCard(
+                                        flightID = flight.id,
+                                        prefixICAO = flight.prefixICAO,
+                                        flightName = flight.flightName,
+                                        destination = flight.route.destinations[0],
+                                        modifier = Modifier,
+                                        airlineCompany = airlineData!!.name,
+                                        logo = painterResource(id = airlineData.logoResId),
+                                        scheduleDate = flight.scheduleDate,
+                                        scheduleTime = flight.scheduleTime,
+                                        estimatedLandingDate = parsedDateTime?.toLocalDate().toString(),
+                                        estimatedLandingTime = parsedDateTime?.toLocalTime().toString(),
+                                        duration = "${duration.toHours()}h${duration.toMinutes()-duration.toHours()*60}m",
+                                        onCardClicked = onCardClicked
+                                    )
+                                }
                             }
                         }
                     } else {
@@ -129,7 +145,7 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                         TextButton(onClick = onFlightButtonClick) {
                             Text(text = stringResource(id = R.string.see_more_flights))
                         }
-                        TextButton(onClick = onFavouriteButtonClick) {
+                        TextButton(onClick ={}) {
                             Text(text = stringResource(id = R.string.see_fav_flights))
                         }
                     }
@@ -164,7 +180,7 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                         Text(
                             text = "Top Flights",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 26.sp,
+                            fontSize = 22.sp,
                         )
                         Image(
                             painter = painterResource(id = R.drawable.fly),
@@ -176,7 +192,7 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                         )
                     }
                     Column {
-                        flights!!.forEach { flight ->
+                        filteredFlights!!.forEach { flight ->
                             val scheduleTime = LocalTime.parse(
                                 flight.scheduleTime, DateTimeFormatter.ISO_LOCAL_TIME
                             )
@@ -185,10 +201,11 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                             )
                             val airlineData =
                                 AirlineRepository.getAirlineDataByICAO(flight.prefixICAO)
-                            val duration = java.time.Duration.between(
-                                parsedDateTime.toLocalTime(), scheduleTime
-                            )
+                            val duration = parsedDateTime?.let {
+                                java.time.Duration.between(scheduleTime, it.toLocalTime())
+                            } ?: java.time.Duration.ZERO
                             FlightCard(
+                                flightID =flight.id,
                                 prefixICAO = flight.prefixICAO,
                                 flightName = flight.flightName,
                                 destination = flight.route.destinations[0],
@@ -197,9 +214,12 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onFavouriteButtonClick: () -> Un
                                 logo = painterResource(id = airlineData.logoResId),
                                 scheduleDate = flight.scheduleDate,
                                 scheduleTime = flight.scheduleTime,
-                                estimatedLandingDate = parsedDateTime.toLocalDate().toString(),
-                                estimatedLandingTime = parsedDateTime.toLocalTime().toString(),
-                                duration = "${duration.toHours()}h${duration.toMinutes()}m"
+                                estimatedLandingDate = parsedDateTime?.toLocalDate().toString(),
+                                estimatedLandingTime = parsedDateTime?.toLocalTime().toString(),
+                                duration = "${duration.toHours()}h  ${duration.toMinutes()-duration.toHours()*60}m",
+                                onCardClicked = { id ->
+                                    onCardClicked(id)
+                                },
                             )
                         }
                     }

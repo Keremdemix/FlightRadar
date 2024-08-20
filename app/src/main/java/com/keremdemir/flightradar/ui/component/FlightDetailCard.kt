@@ -1,5 +1,7 @@
 package com.keremdemir.flightradar.ui.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,28 +25,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.keremdemir.flightradar.R
+import com.keremdemir.flightradar.data.AirlineRepository
+import com.keremdemir.flightradar.data.model.Flight
+import com.keremdemir.flightradar.utils.Utils
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter.ISO_LOCAL_TIME
+import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FlightDetailsCard(
-    modifier: Modifier,
-    flightDirection: String,
-    flightName: String,
-    gate: String,
-    prefixIATA: String,
-    flightState: String,
-    baggageClaim: String,
-    prefixICAO: String,
-    destination: String,
-    airlineCompany: String,
-    logo: Painter,
-    scheduleTime: String,
-    scheduleDate: String,
-    estimatedLandingTime: String,
-    estimatedLandingDate: String,
-    actualLandingTime: String?,
-    actualLandingDate: String?,
-    duration: String
+    flightItem: Flight
 ) {
+    val scheduleTime = LocalTime.parse(
+        flightItem.scheduleTime, ISO_LOCAL_TIME
+    )
+    val parsedLandingDateTime = OffsetDateTime.parse(
+        flightItem.estimatedLandingTime, ISO_OFFSET_DATE_TIME
+    )
+    val parsedActualDateTime = OffsetDateTime.parse(
+        flightItem.actualLandingTime, ISO_OFFSET_DATE_TIME
+    )
+    val airlineData = AirlineRepository.getAirlineDataByICAO(flightItem.prefixICAO)
+    val duration = java.time.Duration.between(
+        scheduleTime, parsedLandingDateTime.toLocalTime()
+    )
+
     Column(modifier = Modifier.padding(horizontal = 30.dp)) {
         Row(
             modifier = Modifier
@@ -55,30 +61,33 @@ fun FlightDetailsCard(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row {
-                Image(
-                    painter = logo,
-                    contentDescription = "airline logo",
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                )
+                airlineData?.let { painterResource(id = it.logoResId) }?.let {
+                    Image(
+                        painter = it,
+                        contentDescription = "airline logo",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(start = 10.dp),
                 ) {
+                    airlineData?.let {
+                        Text(
+                            modifier = Modifier.padding(bottom = 4.dp),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            text = it.name
+                        )
+                    }
                     Text(
-                        modifier = Modifier.padding(bottom = 4.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
-                        text = airlineCompany
-                    )
-                    Text(
-                        fontSize = 12.sp, color = Color.Gray, text = flightName
+                        fontSize = 12.sp, color = Color.Gray, text = flightItem.flightName
                     )
                 }
             }
-
         }
         HorizontalDivider(
             Modifier
@@ -94,18 +103,19 @@ fun FlightDetailsCard(
         ) {
             Column {
                 Text(
-                    text = prefixICAO, fontSize = 14.sp, fontWeight = FontWeight.Bold
+                    text = flightItem.prefixICAO, fontSize = 14.sp, fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = scheduleTime, fontSize = 12.sp
+                    text = flightItem.scheduleTime, fontSize = 12.sp
                 )
                 Text(
-                    text = scheduleDate, fontSize = 12.sp
+                    text = flightItem.scheduleDate, fontSize = 12.sp
                 )
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    color = colorResource(id = R.color.grey_300), text = duration.toString()
+                    color = colorResource(id = R.color.grey_300),
+                    text = Utils.formatDuration(duration)
                 )
                 Image(
                     painter = painterResource(id = R.drawable.arrow), contentDescription = "arrow"
@@ -113,13 +123,15 @@ fun FlightDetailsCard(
             }
             Column {
                 Text(
-                    text = destination, fontSize = 14.sp, fontWeight = FontWeight.Bold
+                    text = flightItem.route.destinations[0],
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = estimatedLandingTime, fontSize = 12.sp
+                    text = Utils.formatLocalTime(parsedLandingDateTime), fontSize = 12.sp
                 )
                 Text(
-                    text = estimatedLandingDate, fontSize = 12.sp
+                    text = Utils.formatLocalDate(parsedLandingDateTime), fontSize = 12.sp
                 )
             }
         }
@@ -135,11 +147,11 @@ fun FlightDetailsCard(
             ) {
             Column(Modifier.width(200.dp)) {
                 BoldText(stringResource(id = R.string.flight_direction))
-                LightText(flightDirection)
+                LightText(flightItem.flightDirection)
             }
             Column {
                 BoldText(stringResource(id = R.string.flight_name))
-                LightText(flightName)
+                LightText(flightItem.flightName)
             }
         }
         HorizontalDivider(
@@ -153,11 +165,11 @@ fun FlightDetailsCard(
         ) {
             Column(Modifier.width(200.dp)) {
                 BoldText(stringResource(id = R.string.gate))
-                LightText(gate)
+                LightText(flightItem.id)
             }
             Column {
                 BoldText(stringResource(id = R.string.iata_prefix))
-                LightText(prefixIATA)
+                LightText(flightItem.prefixIATA)
             }
         }
         HorizontalDivider(
@@ -171,11 +183,15 @@ fun FlightDetailsCard(
         ) {
             Column(Modifier.width(200.dp)) {
                 BoldText(stringResource(id = R.string.flight_state))
-                LightText(flightState.toString())
+                LightText(
+                    flightItem.publicFlightState.flightStates.joinToString(
+                        separator = ", "
+                    ),
+                )
             }
             Column {
                 BoldText(stringResource(id = R.string.baggage_claim))
-                LightText(baggageClaim.toString())
+                flightItem.baggageClaim?.belts?.let { LightText(it.joinToString(separator = ", ")) }
             }
         }
         HorizontalDivider(
@@ -185,7 +201,13 @@ fun FlightDetailsCard(
         )
         Column {
             BoldText(stringResource(id = R.string.estimated_landing_time))
-            LightText("$estimatedLandingDate    $estimatedLandingTime")
+            LightText(
+                "${Utils.formatLocalDate(parsedLandingDateTime)}    ${
+                    Utils.formatLocalTime(
+                        parsedLandingDateTime
+                    )
+                }"
+            )
         }
         HorizontalDivider(
             Modifier
@@ -194,9 +216,13 @@ fun FlightDetailsCard(
         )
         Column {
             BoldText(stringResource(id = R.string.actual_landing_time))
-            if (actualLandingTime != null) {
-                LightText("$actualLandingDate    $actualLandingTime")
-            }
+            LightText(
+                "${Utils.formatLocalDate(parsedActualDateTime)}    ${
+                    Utils.formatLocalTime(
+                        parsedActualDateTime
+                    )
+                }"
+            )
         }
     }
 }

@@ -26,4 +26,5 @@
     <string name="estimated_landing_time">"Estimated Landing Time"</string>
     <string name="actual_landing_time">"Actual Landing Time"</string>
     <string name="flight_details">"Flight Details"</string>
+    <string name="top_flights">"Top Flights"</string>
 </resources>

@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.sp
 import com.keremdemir.flightradar.R
 
 @Composable
-fun FRTop(config: TopBarConfig) {
+fun FRTop(config: TopBarConfig,onBackButtonClicked:()->Unit) {
     if (config.isHomeScreen) HomeTopBar(config.title)
-    else DefaultTopBar(config)
+    else DefaultTopBar(config, onBackButtonClicked =onBackButtonClicked)
 
 }
 
@@ -56,7 +56,7 @@ fun HomeTopBar(title: String) {
 }
 
 @Composable
-fun DefaultTopBar(config: TopBarConfig) {
+fun DefaultTopBar(config: TopBarConfig,onBackButtonClicked:()->Unit) {
     Row(
         modifier = Modifier
             .height(90.dp)
@@ -68,7 +68,8 @@ fun DefaultTopBar(config: TopBarConfig) {
         Row(
             verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 20.dp)
         ) {
-            if (config.isBackButtonShown) IconButton(onClick = { }) {
+            if (config.isBackButtonShown)
+                IconButton(onClick = onBackButtonClicked) {
                 Icon(
                     modifier = Modifier.size(18.dp),
                     imageVector = Icons.Outlined.KeyboardArrowLeft,
@@ -86,17 +87,20 @@ fun DefaultTopBar(config: TopBarConfig) {
                 modifier = Modifier.padding(start = 20.dp)
             )
         }
-        if (config.isFavIconShown) Icon(
+        if (config.isFavIconShown) IconButton(
             modifier = Modifier
                 .padding(top = 20.dp, end = 32.dp)
-                .size(26.dp),
-            painter = painterResource(id = R.drawable.fav_icon),
-            tint = Color.White,
-            contentDescription = ""
-        )
+                .size(30.dp), onClick = {}) {
+            Icon(
+
+                modifier =Modifier.padding(4.dp),
+                painter = painterResource(id = R.drawable.fav_icon),
+                tint = Color.White,
+                contentDescription = ""
+            )
+        }
     }
 }
-
 
 data class TopBarConfig(
     val isHomeScreen: Boolean,

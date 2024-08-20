@@ -65,7 +65,6 @@ fun FRBottomNavigationBar(navController: NavController,iconClicked: (String)->Un
                         .padding(horizontal = 60.dp)
                         .size(35.dp),
                         onClick = {
-//                            navController.navigate(BottomNavItem.Flights.route)
                             iconClicked(BottomNavItem.Flights.route)
                         }) {
                         Image(

@@ -51,7 +51,8 @@ fun DestinationsScreen() {
                         imageModifier = Modifier
                             .height(100.dp)
                             .padding(),
-                        cardModifier = Modifier.width(400.dp)
+                        cardModifier = Modifier.width(400.dp),
+                        destinationItem = destination
                     )
                 }
             }

@@ -73,10 +73,12 @@ fun NavGraph(navController: NavHostController) {
 
         composable(
             route = "${Screens.FlightDetails.name}/{id}",
-        ) {backStackEntry ->
+        ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
             if (id != null) {
-                FlightDetailsScreen(clickedFlightID = id)
+                FlightDetailsScreen(
+                    onClickedFlightID = id,
+                    onBackButtonClicked = { navController.popBackStack() })
             }
             println(id)
         }
@@ -86,4 +88,3 @@ fun NavGraph(navController: NavHostController) {
 enum class Screens {
     Splash, Home, Flights, Destinations, FlightDetails
 }
-

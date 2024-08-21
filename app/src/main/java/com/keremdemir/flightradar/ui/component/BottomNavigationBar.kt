@@ -36,7 +36,7 @@ import com.keremdemir.flightradar.R
 import com.keremdemir.flightradar.ui.Screens
 
 @Composable
-fun FRBottomNavigationBar(navController: NavController,iconClicked: (String)->Unit) {
+fun FRBottomNavigationBar(navController: NavController,onIconClicked: (String)->Unit) {
     BottomAppBar(
         windowInsets = WindowInsets(0, 0, 0, 0),
         modifier = Modifier
@@ -65,7 +65,7 @@ fun FRBottomNavigationBar(navController: NavController,iconClicked: (String)->Un
                         .padding(horizontal = 60.dp)
                         .size(35.dp),
                         onClick = {
-                            iconClicked(BottomNavItem.Flights.route)
+                            onIconClicked(BottomNavItem.Flights.route)
                         }) {
                         Image(
                             painter = painterResource(R.drawable.fly),
@@ -77,7 +77,7 @@ fun FRBottomNavigationBar(navController: NavController,iconClicked: (String)->Un
                         .padding(horizontal = 60.dp)
                         .size(35.dp),
                         onClick = {
-                            iconClicked(BottomNavItem.Destinations.route)
+                            onIconClicked(BottomNavItem.Destinations.route)
                         }) {
                         Icon(
                             BottomNavItem.Destinations.icon,
@@ -96,7 +96,7 @@ fun FRBottomNavigationBar(navController: NavController,iconClicked: (String)->Un
             ) {
                 IconButton(
                     onClick = {
-                        iconClicked(BottomNavItem.Home.route)
+                        onIconClicked(BottomNavItem.Home.route)
                     }, modifier = Modifier
                         .align(Alignment.Center)
                         .size(80.dp)

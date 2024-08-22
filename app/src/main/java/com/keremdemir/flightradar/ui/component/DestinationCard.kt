@@ -18,15 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.keremdemir.flightradar.R
+import com.keremdemir.flightradar.data.model.Destination
 
 @Composable
 fun DestinationCard(
     modifier: Modifier = Modifier,
+    destinationItem: Destination,
     cardModifier: Modifier = Modifier,
     imageModifier: Modifier = Modifier,
-    destinationCity: String? = "",
-    destinationCountry: String? = "",
-    destinationIATA: String? = ""
 ) {
     Column(
         modifier = cardModifier
@@ -51,12 +50,12 @@ fun DestinationCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(text = destinationCity ?: "", fontWeight = FontWeight.Bold)
+                destinationItem.city?.let { Text(text = it, fontWeight = FontWeight.Bold) }
 
-                Text(text = destinationIATA ?: "", fontWeight = FontWeight.Bold)
+                Text(text = destinationItem.iata, fontWeight = FontWeight.Bold)
             }
             Text(
-                text = destinationCountry ?: "",
+                text = destinationItem.country,
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .padding(bottom = 10.dp)

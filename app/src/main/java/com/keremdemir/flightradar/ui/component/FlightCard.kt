@@ -1,5 +1,7 @@
 package com.keremdemir.flightradar.ui.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,29 +24,40 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.keremdemir.flightradar.R
+import com.keremdemir.flightradar.data.AirlineRepository
+import com.keremdemir.flightradar.data.model.Flight
+import com.keremdemir.flightradar.utils.Utils
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter.ISO_LOCAL_TIME
+import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FlightCard(
-    modifier: Modifier,
-    flightName: String,
-    prefixICAO: String,
-    destination: String,
-    airlineCompany: String,
-    logo: Painter,
-    scheduleTime: String,
-    scheduleDate: String,
-    estimatedLandingTime: String,
-    estimatedLandingDate: String,
-    duration: String
+    onCardClicked: (id: String) -> Unit, flightItem: Flight
 ) {
+
+    val scheduleTime = LocalTime.parse(
+        flightItem.scheduleTime, ISO_LOCAL_TIME
+    )
+    val parsedLandingDateTime = OffsetDateTime.parse(
+        flightItem.estimatedLandingTime, ISO_OFFSET_DATE_TIME
+    )
+    val airlineData = AirlineRepository.getAirlineDataByICAO(flightItem.prefixICAO)
+    val duration = java.time.Duration.between(
+        scheduleTime, parsedLandingDateTime.toLocalTime()
+    )
     Card(
+        onClick = {
+            onCardClicked(flightItem.id)
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 8.dp),
@@ -72,7 +85,7 @@ fun FlightCard(
                         .align(Alignment.CenterStart),
                     color = Color.White,
                     fontSize = 14.sp,
-                    text = "İstanbul - Ankara"
+                    text = ""
                 )
             }
             Row(
@@ -83,26 +96,30 @@ fun FlightCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row {
-                    Image(
-                        painter = logo,
-                        contentDescription = "airline logo",
-                        modifier = Modifier
-                            .size(50.dp)
-                            .clip(CircleShape)
-                    )
+                    airlineData?.let { painterResource(id = it.logoResId) }?.let {
+                        Image(
+                            painter = it,
+                            contentDescription = "airline logo",
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                        )
+                    }
                     Column(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .padding(start = 10.dp),
                     ) {
+                        airlineData?.let {
+                            Text(
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                text = it.name
+                            )
+                        }
                         Text(
-                            modifier = Modifier.padding(bottom = 4.dp),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            text = airlineCompany
-                        )
-                        Text(
-                            fontSize = 12.sp, color = Color.Gray, text = flightName
+                            fontSize = 12.sp, color = Color.Gray, text = flightItem.flightName
                         )
                     }
                 }
@@ -127,18 +144,19 @@ fun FlightCard(
             ) {
                 Column {
                     Text(
-                        text = prefixICAO, fontSize = 14.sp, fontWeight = FontWeight.Bold
+                        text = flightItem.prefixICAO, fontSize = 14.sp, fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = scheduleTime, fontSize = 12.sp
+                        text = flightItem.scheduleTime, fontSize = 12.sp
                     )
                     Text(
-                        text = scheduleDate, fontSize = 12.sp
+                        text = flightItem.scheduleDate, fontSize = 12.sp
                     )
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        color = colorResource(id = R.color.grey_300), text = duration.toString()
+                        color = colorResource(id = R.color.grey_300),
+                        text = Utils.formatDuration(duration)
                     )
                     Image(
                         painter = painterResource(id = R.drawable.arrow),
@@ -147,13 +165,15 @@ fun FlightCard(
                 }
                 Column {
                     Text(
-                        text = destination, fontSize = 14.sp, fontWeight = FontWeight.Bold
+                        text = flightItem.route.destinations[0],
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = estimatedLandingTime, fontSize = 12.sp
+                        text = Utils.formatLocalTime(parsedLandingDateTime), fontSize = 12.sp
                     )
                     Text(
-                        text = estimatedLandingDate, fontSize = 12.sp
+                        text = Utils.formatLocalDate(parsedLandingDateTime), fontSize = 12.sp
                     )
                 }
             }

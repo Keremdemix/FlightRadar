@@ -1,5 +1,6 @@
 package com.keremdemir.flightradar.ui.splash
 
+import android.os.Handler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,17 +19,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.keremdemir.flightradar.R
 import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 
 @Composable
 fun SplashScreen(navigateWhenDataFetch: () -> Unit) {
-    val flightsViewModel: FlightsViewModel = viewModel()
-    val destinationViewModel: DestinationViewModel = viewModel()
+    val flightsViewModel = FlightsViewModel()
+    val destinationViewModel = DestinationViewModel()
     val destination = destinationViewModel.destinations.observeAsState().value?.destinations
-    val flights = flightsViewModel.flights.observeAsState().value?.flights
+    val flights = flightsViewModel.flights.observeAsState().value
     Scaffold(
         Modifier.fillMaxSize(), containerColor = colorResource(R.color.light_blue)
     ) { innerPadding ->
@@ -51,7 +51,10 @@ fun SplashScreen(navigateWhenDataFetch: () -> Unit) {
                 fontSize = 32.sp
             )
             if (flights.isNullOrEmpty() && destination.isNullOrEmpty()) {
-                navigateWhenDataFetch()
+                Handler().postDelayed({
+                    navigateWhenDataFetch()
+                }, 1000)
+
             }
         }
     }

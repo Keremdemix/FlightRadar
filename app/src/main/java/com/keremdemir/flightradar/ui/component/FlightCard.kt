@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,20 +16,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import com.keremdemir.flightradar.R
 import com.keremdemir.flightradar.data.AirlineRepository
 import com.keremdemir.flightradar.data.model.Flight
@@ -41,8 +50,19 @@ import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FlightCard(
-    onCardClicked: (id: String) -> Unit, flightItem: Flight
+    onCardClicked: (id: String) -> Unit,
+    flightItem: Flight,
+    onFavouriteClicked: (id: String) -> Unit,
+    onRemoveFavouriteClicked:(id:String)->Unit
 ) {
+    val imageVectorLiveData = MutableLiveData(
+        if (flightItem.isFavorite) {
+            Icons.Filled.Favorite
+        } else {
+            Icons.Outlined.FavoriteBorder
+        }
+    )
+    val imageVector: ImageVector? by imageVectorLiveData.observeAsState()
 
     val scheduleTime = LocalTime.parse(
         flightItem.scheduleTime, ISO_LOCAL_TIME
@@ -123,10 +143,31 @@ fun FlightCard(
                         )
                     }
                 }
-                Image(
-                    modifier = Modifier.size(24.dp),
-                    alignment = Alignment.Center,
-                    painter = painterResource(R.drawable.fav_icon),
+
+                Icon(
+                    imageVector!!,
+                    tint = colorResource(id = R.color.light_blue),// to force imageVector
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .size(24.dp)
+                        .clickable {
+                            if (flightItem.isFavorite){
+                                onRemoveFavouriteClicked(flightItem.id)
+                                flightItem.isFavorite=false
+                            }else{
+                                onFavouriteClicked(flightItem.id)
+                                flightItem.isFavorite=true
+                            }
+
+
+                            imageVectorLiveData.value =
+                                if (flightItem.isFavorite) {
+                                    Icons.Filled.Favorite
+
+                                } else {
+                                    Icons.Outlined.FavoriteBorder
+                                }
+                        },
                     contentDescription = "favourite icon"
                 )
             }

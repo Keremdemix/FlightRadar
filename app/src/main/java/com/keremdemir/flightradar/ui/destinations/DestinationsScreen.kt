@@ -43,10 +43,10 @@ fun DestinationsScreen() {
         if (!destinations.isNullOrEmpty()) {
             Column(
                 Modifier
-                    .padding(vertical = 100.dp)
+                    .padding(top = 90.dp,bottom = 70.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                destinations.take(3).forEach { destination ->
+                destinations.forEach { destination ->
                     DestinationCard(
                         imageModifier = Modifier
                             .height(100.dp)

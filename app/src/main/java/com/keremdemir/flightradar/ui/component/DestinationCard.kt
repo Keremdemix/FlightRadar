@@ -50,7 +50,7 @@ fun DestinationCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                destinationItem.city?.let { Text(text = it, fontWeight = FontWeight.Bold) }
+                 Text(text = destinationItem.city ?: "", fontWeight = FontWeight.Bold)
 
                 Text(text = destinationItem.iata, fontWeight = FontWeight.Bold)
             }

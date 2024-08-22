@@ -19,7 +19,7 @@ import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 @Composable
 fun FlightDetailsScreen(onClickedFlightID: String, onBackButtonClicked: () -> Unit) {
     val flightsViewModel: FlightsViewModel = viewModel()
-    val flights = flightsViewModel.flights.observeAsState().value?.flights
+    val flights = flightsViewModel.flights.observeAsState().value
 
     if (!flights.isNullOrEmpty()) {
         Column {

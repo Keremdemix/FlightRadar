@@ -1,11 +1,15 @@
 package com.keremdemir.flightradar.ui
 
+import DataStorePreferences
+import FavouriteViewModel
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,6 +30,8 @@ import com.keremdemir.flightradar.ui.splash.SplashScreen
 fun FlightRadarApp() {
 
     val navController = rememberNavController()
+    val dataStore = DataStorePreferences(context = LocalContext.current)
+    val favoriteViewModel = FavouriteViewModel(dataStore)
 
     Column {
         Scaffold(bottomBar = {
@@ -34,20 +40,20 @@ fun FlightRadarApp() {
                 FRBottomNavigationBar(navController = navController) { route ->
                     navController.navigate(route) {
                         popUpTo(BottomNavItem.Home.route)
-                        launchSingleTop = true
+                       // launchSingleTop = true
                         restoreState = true
                     }
                 }
             }
         }) {
-            NavGraph(navController = navController)
+            NavGraph(navController = navController, favoriteViewModel = favoriteViewModel)
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, favoriteViewModel: FavouriteViewModel) {
     NavHost(navController = navController, startDestination = Screens.Splash.name) {
 
         composable(route = Screens.Splash.name) {
@@ -60,6 +66,11 @@ fun NavGraph(navController: NavHostController) {
             HomeScreen(onFlightButtonClick = { navController.navigate(Screens.Flights.name) },
                 onCardClicked = { id ->
                     navController.navigate("${Screens.FlightDetails.name}/$id")
+                }, onFavouriteClicked = { id ->
+                    favoriteViewModel.addFavouriteFlightIDList(id)
+                    Log.d("KEREM DEMİR", id)
+                }, onRemoveFavouriteClicked = {id->
+                    favoriteViewModel.removeFavouriteFlightID(id)
                 })
         }
 
@@ -68,7 +79,14 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(route = Screens.Flights.name) {
-            FlightsScreen()
+            FlightsScreen(onFavouriteClicked = { id ->
+                favoriteViewModel.addFavouriteFlightIDList(id)
+                Log.d("KEREM DEMİR", id)
+            }, onCardClicked = {id->
+                navController.navigate("${Screens.FlightDetails.name}/$id")
+            }, onRemoveFavouriteClicked = {id->
+                favoriteViewModel.removeFavouriteFlightID(id)
+            })
         }
 
         composable(
@@ -80,7 +98,6 @@ fun NavGraph(navController: NavHostController) {
                     onClickedFlightID = id,
                     onBackButtonClicked = { navController.popBackStack() })
             }
-            println(id)
         }
     }
 }

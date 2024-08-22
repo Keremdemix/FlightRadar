@@ -28,7 +28,8 @@ data class Flight(
     val serviceType: String,
     val terminal: Int,
     val schemaVersion: String,
-    val codeshares: Codeshares? = null
+    val codeshares: Codeshares? = null,
+    var isFavorite:Boolean=false
 )
 
 data class AircraftType(

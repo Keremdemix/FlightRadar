@@ -51,13 +51,19 @@ import kotlin.concurrent.schedule
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun HomeScreen(onFlightButtonClick: () -> Unit, onCardClicked: (id: String) -> Unit) {
+fun HomeScreen(
+    onFlightButtonClick: () -> Unit,
+    onCardClicked: (id: String) -> Unit,
+    onFavouriteClicked: (id: String) -> Unit,
+    onRemoveFavouriteClicked: (id: String) -> Unit
+) {
     val flightsViewModel: FlightsViewModel = viewModel()
     val destinationViewModel: DestinationViewModel = viewModel()
     val destinations = destinationViewModel.destinations.observeAsState().value?.destinations
-    val flights = flightsViewModel.flights.observeAsState().value?.flights
+    val flights = flightsViewModel.flights.observeAsState().value
     var filteredFlights by remember { mutableStateOf(flights) }
-    var timer: Timer = Timer()
+    var timer = Timer()
+
 
     Box {
         Column(
@@ -91,9 +97,13 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onCardClicked: (id: String) -> U
                             flights.take(
                                 3
                             ).forEach { flight ->
-                                FlightCard(
-                                    flightItem = flight, onCardClicked = onCardClicked
-                                )
+                                FlightCard(flightItem = flight,
+                                    onCardClicked = onCardClicked,
+                                    onFavouriteClicked = { id ->
+                                        onFavouriteClicked(id)
+                                    }, onRemoveFavouriteClicked = {id->
+
+                                    })
                             }
                         }
                     } else {
@@ -153,11 +163,13 @@ fun HomeScreen(onFlightButtonClick: () -> Unit, onCardClicked: (id: String) -> U
                     }
                     Column {
                         filteredFlights!!.forEach { flight ->
-                            FlightCard(
-                                onCardClicked = { id ->
-                                    onCardClicked(id)
-                                }, flightItem = flight
-                            )
+                            FlightCard(onCardClicked = { id ->
+                                onCardClicked(id)
+                            }, flightItem = flight, onFavouriteClicked = { id ->
+                                onFavouriteClicked(id)
+                            }, onRemoveFavouriteClicked = {id->
+                                onRemoveFavouriteClicked(id)
+                            })
                         }
                     }
                 }

@@ -8,18 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.keremdemir.flightradar.data.model.Flight
 import com.keremdemir.flightradar.data.repository.FlightsRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.keremdemir.flightradar.data.service.FlightsApi
+import com.keremdemir.flightradar.data.service.RetrofitInstance
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class FlightsViewModel @Inject constructor(
-    private val flightsRepository: FlightsRepository
+
+class FlightsViewModel (
+    private val dataStorePreferences: DataStorePreferences?=null
 ) : ViewModel() {
 
     private var _flights = MutableLiveData<List<Flight>>()
     val flights: LiveData<List<Flight>> by ::_flights
-    private val dataStorePreferences: DataStorePreferences?=null
 
     private var pureFlightList: List<Flight>? = null
 
@@ -30,7 +29,7 @@ class FlightsViewModel @Inject constructor(
     private fun fetchFlights() {
         viewModelScope.launch {
             try {
-                val response = flightsRepository.getFlights()
+                val response = RetrofitInstance.api.getFlights()
                 response?.flights?.let { flightList ->
                     dataStorePreferences?.getFlightIDList()?.forEach { favoriteId ->
                         flightList.forEach {

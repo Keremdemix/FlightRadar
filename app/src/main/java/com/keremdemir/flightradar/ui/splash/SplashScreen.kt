@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import com.keremdemir.flightradar.R
 import com.keremdemir.flightradar.data.repository.FlightsRepository
 import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
@@ -28,7 +29,7 @@ import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 
 @Composable
 fun SplashScreen(navigateWhenDataFetch: () -> Unit) {
-    val flightsViewModel: FlightsViewModel = hiltViewModel()
+    val flightsViewModel: FlightsViewModel=hiltViewModel()
     val destinationViewModel: DestinationViewModel = hiltViewModel()
 
     val destination by destinationViewModel.destinations.observeAsState()

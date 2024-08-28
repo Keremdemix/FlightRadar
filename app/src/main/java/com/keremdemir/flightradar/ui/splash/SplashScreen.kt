@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,16 +20,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.keremdemir.flightradar.R
+import com.keremdemir.flightradar.data.repository.FlightsRepository
 import com.keremdemir.flightradar.ui.viewmodel.DestinationViewModel
 import com.keremdemir.flightradar.ui.viewmodel.FlightsViewModel
 
 @Composable
 fun SplashScreen(navigateWhenDataFetch: () -> Unit) {
-    val flightsViewModel = FlightsViewModel()
-    val destinationViewModel = DestinationViewModel()
-    val destination = destinationViewModel.destinations.observeAsState().value?.destinations
-    val flights = flightsViewModel.flights.observeAsState().value
+    val flightsViewModel: FlightsViewModel = hiltViewModel()
+    val destinationViewModel: DestinationViewModel = hiltViewModel()
+
+    val destination by destinationViewModel.destinations.observeAsState()
+    val flights by flightsViewModel.flights.observeAsState()
+
     Scaffold(
         Modifier.fillMaxSize(), containerColor = colorResource(R.color.light_blue)
     ) { innerPadding ->
@@ -50,7 +55,7 @@ fun SplashScreen(navigateWhenDataFetch: () -> Unit) {
                 color = Color.White,
                 fontSize = 32.sp
             )
-            if (flights.isNullOrEmpty() && destination.isNullOrEmpty()) {
+            if (flights.isNullOrEmpty() ) {
                 Handler().postDelayed({
                     navigateWhenDataFetch()
                 }, 1000)

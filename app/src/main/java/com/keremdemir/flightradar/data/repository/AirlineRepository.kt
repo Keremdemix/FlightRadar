@@ -1,4 +1,4 @@
-package com.keremdemir.flightradar.data
+package com.keremdemir.flightradar.data.repository
 
 import com.keremdemir.flightradar.R
 import com.keremdemir.flightradar.data.model.AirlineData

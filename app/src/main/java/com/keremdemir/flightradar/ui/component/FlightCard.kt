@@ -39,11 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.keremdemir.flightradar.R
-import com.keremdemir.flightradar.data.AirlineRepository
+import com.keremdemir.flightradar.data.repository.AirlineRepository
 import com.keremdemir.flightradar.data.model.Flight
 import com.keremdemir.flightradar.utils.Utils
+import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter.ISO_LOCAL_TIME
 import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
@@ -53,7 +53,7 @@ fun FlightCard(
     onCardClicked: (id: String) -> Unit,
     flightItem: Flight,
     onFavouriteClicked: (id: String) -> Unit,
-    onRemoveFavouriteClicked:(id:String)->Unit
+    onRemoveFavouriteClicked: (id: String) -> Unit
 ) {
     val imageVectorLiveData = MutableLiveData(
         if (flightItem.isFavorite) {
@@ -67,15 +67,19 @@ fun FlightCard(
     val scheduleTime = LocalTime.parse(
         flightItem.scheduleTime, ISO_LOCAL_TIME
     )
-    val parsedLandingDateTime = OffsetDateTime.parse(
-        flightItem.estimatedLandingTime, ISO_OFFSET_DATE_TIME
-    )
+    val parsedLandingDateTime = flightItem.estimatedLandingTime?.let {
+        LocalDateTime.parse(
+            flightItem.estimatedLandingTime, ISO_OFFSET_DATE_TIME
+        )
+    }
     val airlineData = AirlineRepository.getAirlineDataByICAO(flightItem.prefixICAO)
     val duration = java.time.Duration.between(
-        scheduleTime, parsedLandingDateTime.toLocalTime()
+        scheduleTime, (parsedLandingDateTime?: LocalDateTime.now()).toLocalTime()
     )
+
     Card(
         onClick = {
+            println(flightItem.isFavorite)
             onCardClicked(flightItem.id)
         },
         modifier = Modifier
@@ -145,20 +149,19 @@ fun FlightCard(
                 }
 
                 Icon(
-                    imageVector!!,
-                    tint = colorResource(id = R.color.light_blue),// to force imageVector
+                    imageVector!!,// to force imageVector
+                    tint = colorResource(id = R.color.light_blue),
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .size(24.dp)
                         .clickable {
-                            if (flightItem.isFavorite){
+                            if (flightItem.isFavorite) {
                                 onRemoveFavouriteClicked(flightItem.id)
                                 flightItem.isFavorite=false
-                            }else{
+                            } else {
                                 onFavouriteClicked(flightItem.id)
                                 flightItem.isFavorite=true
                             }
-
 
                             imageVectorLiveData.value =
                                 if (flightItem.isFavorite) {
@@ -211,10 +214,16 @@ fun FlightCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = Utils.formatLocalTime(parsedLandingDateTime), fontSize = 12.sp
+                        text = parsedLandingDateTime?.let {
+                            Utils.formatLocalTime(parsedLandingDateTime)
+                        } ?: run { "" }, fontSize = 12.sp
                     )
                     Text(
-                        text = Utils.formatLocalDate(parsedLandingDateTime), fontSize = 12.sp
+                        text = parsedLandingDateTime?.let {
+                            Utils.formatLocalDate(parsedLandingDateTime)
+                        } ?: run {
+                            ""
+                        }, fontSize = 12.sp
                     )
                 }
             }

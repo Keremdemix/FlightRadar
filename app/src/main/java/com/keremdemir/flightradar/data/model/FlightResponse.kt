@@ -5,6 +5,7 @@ data class FlightResponse(
 )
 
 data class Flight(
+    var isFavorite:Boolean=false,
     val lastUpdatedAt: String,
     val actualLandingTime: String?,
     val aircraftType: AircraftType,
@@ -29,7 +30,6 @@ data class Flight(
     val terminal: Int,
     val schemaVersion: String,
     val codeshares: Codeshares? = null,
-    var isFavorite:Boolean=false
 )
 
 data class AircraftType(

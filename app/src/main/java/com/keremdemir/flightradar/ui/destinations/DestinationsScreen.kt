@@ -10,7 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -31,19 +31,22 @@ fun DestinationsScreen() {
     val destinations = destinationViewModel.destinations.observeAsState().value?.destinations
 
     Scaffold(topBar = {
-        TopAppBar(colors = topAppBarColors(
-            containerColor = colorResource(R.color.light_blue),
-        ), title = {
-            Text(
-                stringResource(id = R.string.destinations),
-                color = Color.White,
-            )
-        })
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = colorResource(R.color.light_blue),
+            ),
+            title = {
+                Text(
+                    stringResource(id = R.string.destinations),
+                    color = Color.White,
+                )
+            }
+        )
     }) { _ ->
         if (!destinations.isNullOrEmpty()) {
             Column(
                 Modifier
-                    .padding(top = 90.dp,bottom = 70.dp)
+                    .padding(top = 90.dp, bottom = 70.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 destinations.forEach { destination ->

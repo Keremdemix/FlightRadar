@@ -25,11 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.keremdemir.flightradar.R
-import com.keremdemir.flightradar.data.AirlineRepository
+import com.keremdemir.flightradar.data.repository.AirlineRepository
 import com.keremdemir.flightradar.data.model.Flight
 import com.keremdemir.flightradar.utils.Utils
+import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter.ISO_LOCAL_TIME
 import java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
@@ -41,10 +41,10 @@ fun FlightDetailsCard(
     val scheduleTime = LocalTime.parse(
         flightItem.scheduleTime, ISO_LOCAL_TIME
     )
-    val parsedLandingDateTime = OffsetDateTime.parse(
+    val parsedLandingDateTime = LocalDateTime.parse(
         flightItem.estimatedLandingTime, ISO_OFFSET_DATE_TIME
     )
-    val parsedActualDateTime = OffsetDateTime.parse(
+    val parsedActualDateTime = LocalDateTime.parse(
         flightItem.actualLandingTime, ISO_OFFSET_DATE_TIME
     )
     val airlineData = AirlineRepository.getAirlineDataByICAO(flightItem.prefixICAO)
@@ -165,7 +165,7 @@ fun FlightDetailsCard(
         ) {
             Column(Modifier.width(200.dp)) {
                 BoldText(stringResource(id = R.string.gate))
-                LightText(flightItem.id)
+                LightText("${flightItem.terminal}")
             }
             Column {
                 BoldText(stringResource(id = R.string.iata_prefix))

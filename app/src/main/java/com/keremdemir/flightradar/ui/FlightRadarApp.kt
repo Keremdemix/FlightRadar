@@ -35,6 +35,7 @@ fun FlightRadarApp() {
 
     Column {
         Scaffold(bottomBar = {
+
             val navBackStackEntry = navController.currentBackStackEntryAsState()
             if (navBackStackEntry.value?.destination?.route != Screens.Splash.name) {
                 FRBottomNavigationBar(navController = navController) { route ->
@@ -46,6 +47,7 @@ fun FlightRadarApp() {
                 }
             }
         }) {
+
             NavGraph(navController = navController, favoriteViewModel = favoriteViewModel)
         }
     }
@@ -58,7 +60,11 @@ fun NavGraph(navController: NavHostController, favoriteViewModel: FavouriteViewM
 
         composable(route = Screens.Splash.name) {
             SplashScreen(navigateWhenDataFetch = {
-                navController.navigate(Screens.Home.name)
+                navController.navigate(Screens.Home.name) {
+                    popUpTo(Screens.Splash.name) {
+                        inclusive = true
+                    }
+                }
             })
         }
 
@@ -71,7 +77,8 @@ fun NavGraph(navController: NavHostController, favoriteViewModel: FavouriteViewM
                     Log.d("KEREM DEMİR", id)
                 }, onRemoveFavouriteClicked = {id->
                     favoriteViewModel.removeFavouriteFlightID(id)
-                })
+                }
+            )
         }
 
         composable(route = Screens.Destinations.name) {

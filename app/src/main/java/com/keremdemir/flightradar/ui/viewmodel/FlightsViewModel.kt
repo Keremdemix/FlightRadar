@@ -1,17 +1,25 @@
 package com.keremdemir.flightradar.ui.viewmodel
 
+import DataStorePreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.keremdemir.flightradar.data.model.Flight
-import com.keremdemir.flightradar.data.service.RetrofitInstance
+import com.keremdemir.flightradar.data.repository.FlightsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FlightsViewModel : BaseViewModel() {
+@HiltViewModel
+class FlightsViewModel @Inject constructor(
+    private val flightsRepository: FlightsRepository
+) : ViewModel() {
 
     private var _flights = MutableLiveData<List<Flight>>()
     val flights: LiveData<List<Flight>> by ::_flights
+    private val dataStorePreferences: DataStorePreferences?=null
 
     private var pureFlightList: List<Flight>? = null
 
@@ -22,15 +30,14 @@ class FlightsViewModel : BaseViewModel() {
     private fun fetchFlights() {
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.api.getFlights()
+                val response = flightsRepository.getFlights()
                 response?.flights?.let { flightList ->
-
-                    flightList.forEach {
-//                        dalist.forEach {
-//                            isf
-//                        }
+                    dataStorePreferences?.getFlightIDList()?.forEach { favoriteId ->
+                        flightList.forEach {
+                            if (it.id == favoriteId)
+                                it.isFavorite = true
+                        }
                     }
-
                     pureFlightList = flightList
                     _flights.value = flightList
                 }
@@ -46,8 +53,6 @@ class FlightsViewModel : BaseViewModel() {
     }
 
     fun showFavoriteItems(favoritesItemIdsList: List<String>) {
-
-
         val flightList = pureFlightList
         val filteredFlightsList = arrayListOf<Flight>()
         flightList?.forEach { flight ->
@@ -57,7 +62,6 @@ class FlightsViewModel : BaseViewModel() {
                 }
             }
         }
-
         _flights.value = filteredFlightsList
     }
 }
